@@ -19,5 +19,5 @@ if (resultado == "FALHA") {
     ExitApp()
 }
 
-; resultado := FecharSistema()
+resultado := FecharSistema()
 ExitApp()

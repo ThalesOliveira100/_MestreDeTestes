@@ -15,21 +15,22 @@ SetTitleMatchMode(1) ; Define que a busca pelo título do programa deve começar
  * @return {String} "SUCESSO" ou "FALHA".
  */
 LaunchApp() {
-    CaminhoApp := IniRead("../Config.ini", "SISTEMA", "CaminhoExecutavel")
+    caminhoConfig := A_InitialWorkingDir . "/Config.ini"
+    caminhoApp := IniRead(caminhoConfig, "SISTEMA", "CaminhoExecutavel")
     classeJanelaLogin := "ahk_class Tfrm_LoginSistema"
 
-    if not CaminhoApp {
+    if not caminhoApp {
         MsgBox("A chave 'CaminhoExecutavel' não foi encontrada no Config.ini.", "Erro de Configuração", 16)
         Return "FALHA"
     }
 
-    if not FileExist(CaminhoApp) {
-        MsgBox("O caminho do executável especificado no Config.ini não foi encontrado:`n" . CaminhoApp, "Erro de Configuração", 16)
+    if not FileExist(caminhoApp) {
+        MsgBox("O caminho do executável especificado no Config.ini não foi encontrado:`n" . caminhoApp, "Erro de Configuração", 16)
         Return "FALHA"
     }
 
     try {
-        Run(CaminhoApp)
+        Run(caminhoApp)
         WinWait(classeJanelaLogin, , 3)
 
     } catch as e {
@@ -69,9 +70,10 @@ VerificaPopUpDeAvisoFeriados() {
  * @return {String} "SUCESSO" ou "FALHA".
  */
 Login() {
-    TituloJanela := IniRead("../Config.ini", "SISTEMA", "TituloJanela", "DYGNUS PREMIER")
-    user := IniRead("../Config.ini", "CREDENCIAIS", "Usuario", "MULT")
-    pass := IniRead("../Config.ini", "CREDENCIAIS", "Senha", "COBOL")
+    caminhoConfig := A_InitialWorkingDir . "/Config.ini"
+    TituloJanela := IniRead(caminhoConfig, "SISTEMA", "TituloJanela")
+    user := IniRead(caminhoConfig, "CREDENCIAIS", "Usuario", "MULT")
+    pass := IniRead(caminhoConfig, "CREDENCIAIS", "Senha", "COBOL")
     
     If not TituloJanela {
         MsgBox("A chave 'TituloJanela' não foi encontrada no Config.ini.", "Erro de Configuração", 16)
@@ -146,7 +148,8 @@ AcessarTelaPorCodigo(codigo) {
  * @return {String} "SUCESSO"
  */
 FecharSistema() {
-    TituloJanela := IniRead("../Config.ini", "SISTEMA", "TituloJanela")
+    caminhoConfig := A_InitialWorkingDir . "/Config.ini"
+    TituloJanela := IniRead(caminhoConfig, "SISTEMA", "TituloJanela")
     try {
         WinClose(TituloJanela)
 
