@@ -156,6 +156,7 @@ FecharSistema() {
         hWnd := WinWait("Confirmação")
         if (hWnd) {
             WinActivate("ahk_id " . hWnd)
+            WinWait("ahk_id " . hWnd)
             ControlClick("Button1", "Confirmação")
             WinWaitClose("ahk_id " . hWnd, , 2)
         }
