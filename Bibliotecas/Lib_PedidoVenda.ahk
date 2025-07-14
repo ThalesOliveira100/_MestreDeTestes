@@ -54,8 +54,9 @@ FecharInformacaoVendedorExterno() {
         if (hWnd) {
             WinActivate("ahk_id " . hWnd)
             WinWait("ahk_id " . hWnd)
-            ControlClick("TBitBtn3", "Vendedor Externo")
-            WinWaitClose("ahk_id " . hWnd, , 3)
+            ; ControlClick("TBitBtn3", "Vendedor Externo")
+            ; WinWaitClose("ahk_id " . hWnd, , 3)
+            SendInput("{F6}")
         }
     } catch as e {
         MsgBox("Erro ao fechar informação do vendedor externo: " . e.Message, "ATENÇÃO", 16)
@@ -65,20 +66,22 @@ FecharInformacaoVendedorExterno() {
 }
 
 
-InserirItemNoPedido(tipo, produto, quantidade, preco, valorDesconto) {
+InserirItemNoPedido(tipo, item, quantidade, preco, valorDesconto) {
     try {
         Sleep(1500)
 
         if (tipo != "P") {
-            SendInput("!{Left}")
             SendInput(tipo . "{Tab}")
             Sleep(500)
         } else {
             SendInput("{Enter}{Enter}")
         }
 
-        SendInput(produto . "{Tab}")
+        SendInput(item . "{Tab}")
         Sleep(500)
+        if (tipo != "P") {
+            SendInput("{Tab}")
+        }
 
         SendInput(quantidade . "{Tab}")
         Sleep(500)
