@@ -1,5 +1,8 @@
 #Requires AutoHotkey v2.0
+#Include Lib_Validacao.ahk
+
 SetTitleMatchMode(1) ; Define que a busca pelo título do programa deve começar com o indicado.
+SetTimer(ValidarExibicaoMensagemAssistenteSistema, 500)
 
 ; =================================================================================
 ; || BIBLIOTECA DE FUNÇÕES DA ROTINA PEDIDO DE VENDA                              ||
@@ -29,11 +32,9 @@ IncluirDadosGeraisPedido(estabelecimento, operacao, cliente, vendedor, informaAm
 
         SendInput(cliente . "{Tab}{Tab}")
         Sleep(500)
-
-        if (WinWait("Posição Financeira do Cliente")) {
-            SendInput("{F12}")
-            SendInput("{Tab}")
-        }
+        ValidarExibicaoPosicaoFinanceiraCliente()
+        SendInput("{Tab}")
+        Sleep(500)
 
         SendInput(vendedor . "{Tab}")
         Sleep(500)
@@ -91,15 +92,6 @@ InserirItemNoPedido(tipo, produto, quantidade, preco, valorDesconto) {
         }
         SendInput("{Tab}")
 
-        ; Validações de produtos
-        if (WinWait("Assistente do Sistema")) {
-            try {
-                SendInput("{Enter}")
-            } catch Error as e {
-                MsgBox(e.Message)
-            }
-        }
-
     } catch as e {
         MsgBox("Erro ao inserir item no pedido: " . e.Message, "ATENÇÃO", 16)
         return "ERRO"
@@ -110,36 +102,21 @@ InserirItemNoPedido(tipo, produto, quantidade, preco, valorDesconto) {
 
 GravarPedido(informaFinanceiro := false, imprimePedido := false){
     try {
-        SendInput("{F9}")
         Sleep(500)
+        SendInput("{F9}")
 
         if (WinWait("Dados Adicionais do Pedido")) {
             SendInput("{F12}")
         }
 
-        Sleep(500)
-
-        if (WinWait("Assistente do Sistema")) {
-            SendInput("{Enter}")
-        }
-        Sleep(500)
+        Sleep(1500)
 
         SendInput("{Tab}{Enter}")
         Sleep(500)
         SendInput("{Tab}{Enter}")
         Sleep(500)
-        SendInput("{Tab}{Enter}")
-        Sleep(500)
 
-        ; ; Validação Financeiro
-        ; if (informaFinanceiro == false) {
-        ;     SendInput("{Tab}{Enter}")
-        ; }
-
-        ; ; Validação Impressão
-        ; if(imprimePedido == false) {
-        ;     SendInput("{Tab}{Enter}")
-        ; } 
+        MsgBox("executou até o final")
 
     } catch as e {
         MsgBox("Erro ao inserir item no pedido: " . e.Message, "ATENÇÃO", 16)

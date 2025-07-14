@@ -38,6 +38,11 @@ if(resultado == "FALHA") {
 SendInput("{Enter}")
 
 resultado := InserirItemNoPedido("P", 100, 1, 100, 0)
+resultado := InserirItemNoPedido("P", 100, 1, 100, 0)
+resultado := InserirItemNoPedido("P", 100, 1, 100, 0)
+resultado := InserirItemNoPedido("P", 100, 1, 100, 0)
+resultado := InserirItemNoPedido("P", 100, 1, 100, 0)
+resultado := InserirItemNoPedido("P", 100, 1, 100, 0)
 if(resultado == "FALHA") {
     MsgBox("Erro identificado, o script será encerrado.", "ERRO na inclusão de produtos no pedido!", 16)
     ExitApp(1)
