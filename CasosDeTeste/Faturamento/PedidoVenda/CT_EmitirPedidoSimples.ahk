@@ -7,46 +7,46 @@
 resultado := LaunchApp()
 if (resultado == "FALHA") {
     MsgBox("Erro identificado, o script será encerrado.", "ERRO na INICIALIZAÇÃO!", 16)
-    ExitApp()
+    ExitApp(1)
 }
 
 resultado := Login()
 if (resultado == "FALHA") {
     MsgBox("Erro identificado, o script será encerrado.", "ERRO no LOGIN!", 16)
-    ExitApp()
+    ExitApp(1)
 }
 
 resultado := AcessarTelaPorCodigo(403)
 if(resultado == "FALHA") {
     MsgBox("Erro identificado, o script será encerrado.", "ERRO no acesso da tela!", 16)
-    ExitApp()
+    ExitApp(1)
 }
 
-; WinWait("Tfrm_PedidoVenda1")
-Sleep(1500)
-resultado := ControlClick("TBitBtn37")
-
-if(resultado == "FALHA") {
-    MsgBox("Erro identificado, o script será encerrado.", "ERRO ao clicar no botão", 16)
-    ExitApp()
-}
-
-resultado := IncluirDadosGeraisPedido(1, 99, 100, 15, false)
+resultado := IncluirDadosGeraisPedido(1, 99, 100, 15)
 if(resultado == "FALHA") {
     MsgBox("Erro identificado, o script será encerrado.", "ERRO na inclusão de dados gerais do pedido!", 16)
-    ExitApp()
+    ExitApp(1)
 }
 
 resultado := FecharInformacaoVendedorExterno()
 if(resultado == "FALHA") {
     MsgBox("Erro identificado, o script será encerrado.", "ERRO ao fechar dados do VE do pedido!", 16)
-    ExitApp()
+    ExitApp(1)
 }
 
-resultado := InserirItemNoPedido("P", 100, 1, 100)
+; Confirma a data do pedido como a data atual.
+SendInput("{Enter}")
+
+resultado := InserirItemNoPedido("P", 100, 1, 100, 0)
 if(resultado == "FALHA") {
     MsgBox("Erro identificado, o script será encerrado.", "ERRO na inclusão de produtos no pedido!", 16)
-    ExitApp()
+    ExitApp(1)
+}
+
+resultado := GravarPedido()
+if(resultado == "FALHA") {
+    MsgBox("Erro identificado, o script será encerrado.", "ERRO na gravação do pedido!", 16)
+    ExitApp(1)
 }
 
 ExitApp()

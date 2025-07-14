@@ -10,33 +10,37 @@ SetTitleMatchMode(1) ; Define que a busca pelo título do programa deve começar
 
 
 IncluirDadosGeraisPedido(estabelecimento, operacao, cliente, vendedor, informaAmbiente:=False) {
-    ; classJanelaPedido := "Tfrm_PedidoVenda1"
-    classCampoEstabelecimento := "TDBEdit15"
-    classCampoOperacao := "TDBEdit11"
-    classCampoCliente := "TDBEdit13"
-    classCampoVendedor := "TDBEdit12"
-
     try {
-        ControlClick(classCampoEstabelecimento)
-        SendInput(estabelecimento)
+        SendInput("{F3}")
+        SendInput(estabelecimento . "{Tab}")
+        Sleep(500)
 
         if (informaAmbiente == true) {
             MsgBox("Selecionado para informar o ambiente.`n`nFuncionalidade ainda não está pronta.", "Atenção!", 64)
+            WinActivate("DYGNUS PREMIER")
+            SendInput("{Enter}")
         } else {
             SendInput("{Enter}")
         }
 
-        ControlClick(classCampoOperacao, , , , 2)
-        SendInput(operacao)
+        SendInput("^A")
+        SendInput(operacao . "{Tab}")
+        Sleep(500)
 
-        ControlClick(classCampoCliente, , , , 2)
-        SendInput(cliente)
+        SendInput(cliente . "{Tab}{Tab}")
+        Sleep(500)
 
-        ControlClick(classCampoVendedor, , , , 2)
-        SendInput(vendedor)
+        if (WinWait("Posição Financeira do Cliente")) {
+            SendInput("{F12}")
+            SendInput("{Tab}")
+        }
 
+        SendInput(vendedor . "{Tab}")
+        Sleep(500)
+
+        SendInput("{Enter}")
     } catch as e {
-        MsgBox("Erro ao incluir dados gerais do pedido", "ATENÇÃO", 16)
+        MsgBox("Erro ao incluir dados gerais do pedido: " . e.Message, "ATENÇÃO", 16)
         return "ERRO"
     }
     return "SUCESSO"
@@ -44,8 +48,6 @@ IncluirDadosGeraisPedido(estabelecimento, operacao, cliente, vendedor, informaAm
 
 
 FecharInformacaoVendedorExterno() {
-    ; classAvisoVendedorExterno := "Tfrm_Solicita_Vendedor_Externo"
-
     try {
         hWnd := WinWait("Vendedor Externo")
         if (hWnd) {
@@ -55,35 +57,93 @@ FecharInformacaoVendedorExterno() {
             WinWaitClose("ahk_id " . hWnd, , 3)
         }
     } catch as e {
-        MsgBox("Erro ao fechar informação do vendedor externo", "ATENÇÃO", 16)
+        MsgBox("Erro ao fechar informação do vendedor externo: " . e.Message, "ATENÇÃO", 16)
         return "ERRO"
     }
     return "SUCESSO"
 }
 
 
-InserirItemNoPedido(tipo, produto, quantidade, preco) {
-    classTipo := "TMaskEdit1"
-    classProduto := "TMaskEdit2"
-    classQuantidade := "TJvDBCalcEdit7"
-    classPreco := "TJvDBCalcEdit6"
-
+InserirItemNoPedido(tipo, produto, quantidade, preco, valorDesconto) {
     try {
-        ControlClick(classTipo, , , , 2)
-        SendInput(tipo)
+        Sleep(1500)
 
-        ControlClick(classProduto)
-        SendInput(produto)
+        if (tipo != "P") {
+            SendInput("!{Left}")
+            SendInput(tipo . "{Tab}")
+            Sleep(500)
+        } else {
+            SendInput("{Enter}{Enter}")
+        }
 
-        ControlClick(classQuantidade)
-        SendInput(quantidade)
+        SendInput(produto . "{Tab}")
+        Sleep(500)
 
-        ControlClick(classPreco)
-        SendInput(preco)
+        SendInput(quantidade . "{Tab}")
+        Sleep(500)
+
+        SendInput(preco . "{Tab}{Tab}")
+        Sleep(500)
+
+        ; Informa desconto, se o valor passado for maior que 0
+        if (valorDesconto != 0) {
+            SendInput(valorDesconto)
+        }
+        SendInput("{Tab}")
+
+        ; Validações de produtos
+        if (WinWait("Assistente do Sistema")) {
+            try {
+                SendInput("{Enter}")
+            } catch Error as e {
+                MsgBox(e.Message)
+            }
+        }
 
     } catch as e {
-        MsgBox("Erro ao inserir item no pedido", "ATENÇÃO", 16)
+        MsgBox("Erro ao inserir item no pedido: " . e.Message, "ATENÇÃO", 16)
         return "ERRO"
     }
     return "SUCESSO"  
+}
+
+
+GravarPedido(informaFinanceiro := false, imprimePedido := false){
+    try {
+        SendInput("{F9}")
+        Sleep(500)
+
+        if (WinWait("Dados Adicionais do Pedido")) {
+            SendInput("{F12}")
+        }
+
+        Sleep(500)
+
+        if (WinWait("Assistente do Sistema")) {
+            SendInput("{Enter}")
+        }
+        Sleep(500)
+
+        SendInput("{Tab}{Enter}")
+        Sleep(500)
+        SendInput("{Tab}{Enter}")
+        Sleep(500)
+        SendInput("{Tab}{Enter}")
+        Sleep(500)
+
+        ; ; Validação Financeiro
+        ; if (informaFinanceiro == false) {
+        ;     SendInput("{Tab}{Enter}")
+        ; }
+
+        ; ; Validação Impressão
+        ; if(imprimePedido == false) {
+        ;     SendInput("{Tab}{Enter}")
+        ; } 
+
+    } catch as e {
+        MsgBox("Erro ao inserir item no pedido: " . e.Message, "ATENÇÃO", 16)
+        return "ERRO"
+    }
+    return "SUCESSO"
 }
