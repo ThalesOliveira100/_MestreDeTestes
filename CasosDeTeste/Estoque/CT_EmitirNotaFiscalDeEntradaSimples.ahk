@@ -9,8 +9,6 @@ try {
     dadosNota := Map(
         "estabelecimento", 1,
         "fornecedor", 2,
-        "tipoDocumento", 2,
-
     )
 
     resultado := InformarDadosGeraisDaNotaEntrada(dadosNota)

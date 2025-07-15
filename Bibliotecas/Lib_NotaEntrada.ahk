@@ -11,10 +11,26 @@ SetTitleMatchMode(1) ; Define que a busca pelo título do programa deve começar
 ; || entrada. Tais como incluir produto, informar valor, informar dados gerais, ..||
 ; =================================================================================
 
+
+/**
+ * @description - InformarDadosGeraisDaNotaEntrada (params)
+ * Informa os dados gerais da nota de entrada, conforme os valores padrões, ou informados nesta função.
+ * 
+ * @param params - Mapa da combinação dos seguintes paramentros, sendo completamente opcionais.
+ * @param estabelecimento - Estabelecimento para inclusão da nota.
+ * @param fornecedor - Fornecedor da nota.
+ * @param tipoDocumento - Se informado como 15 irá informar a chave de acesso da nota.
+ * @param numero - Numero da nota de entrada. Se não informado, o script gerará um número aleatório entre 1000 e 99999.
+ * @param serie - Série da nota. Se não informado, o script irá pular o campo, deixando o valor padrão.
+ * @param tipoCadastro - Tipo de cadastro "F" para fornecedor e "C" para cliente. (Sem suporte para clientes no momento).
+ * 
+ * @return {String} "SUCESSO" ou "FALHA"
+ */
 InformarDadosGeraisDaNotaEntrada(params){
     try {
         estabelecimento     := params.Has("estabelecimento")    ? params["estabelecimento"]: 1
         fornecedor          := params.Has("fornecedor")         ? params["fornecedor"]: 2
+        cliente             := params.Has("cliente")            ? params["cliente"]: 100
         tipoDocumento       := params.Has("tipoDocumento")      ? params["tipoDocumento"]: 15
         numero              := params.Has("numero")             ? params["numero"]: ""
         serie               := params.Has("serie")              ? params["serie"]: ""
@@ -63,35 +79,3 @@ InformarDadosGeraisDaNotaEntrada(params){
     return "SUCESSO"
 
 }
-
-
-EncontrarNumeroDANFE() {
-    tituloJanelaDANFE := "Informe o Número do DANFE"
-    classCampoDANFE := "TMaskEdit1"
-    classBotaoConfirmar := "TBitBtn1"
-
-    ControlFocus(classCampoDANFE, tituloJanelaDANFE)
-    SendInput("123456789")
-    Sleep(500)
-
-    Loop 10 {
-        numeroFinal := A_Index - 1
-
-        ControlFocus(classCampoDANFE, tituloJanelaDANFE)
-        SendInput(numeroFinal)
-        ControlClick(classBotaoConfirmar, tituloJanelaDANFE)
-
-        if WinWait("Assistente do Sistema", , 1.5) {
-            SendInput("{Enter}")
-            WinWaitClose("Assistente do Sistema", , 2)
-            SendInput("{Left}")
-            Sleep(500)
-        } else {
-            return true
-        }
-    }
-
-    MsgBox("Nenhum dos 10 números finais para a DANFE foi aceito")
-    return False
-}
-

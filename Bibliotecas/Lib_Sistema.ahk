@@ -143,6 +143,37 @@ AcessarTelaPorCodigo(codigo) {
 }
 
 
+EncontrarNumeroDANFE() {
+    tituloJanelaDANFE := "Informe o Número do DANFE"
+    classCampoDANFE := "TMaskEdit1"
+    classBotaoConfirmar := "TBitBtn1"
+
+    ControlFocus(classCampoDANFE, tituloJanelaDANFE)
+    SendInput("123456789")
+    Sleep(500)
+
+    Loop 10 {
+        numeroFinal := A_Index - 1
+
+        ControlFocus(classCampoDANFE, tituloJanelaDANFE)
+        SendInput(numeroFinal)
+        ControlClick(classBotaoConfirmar, tituloJanelaDANFE)
+
+        if WinWait("Assistente do Sistema", , 1.5) {
+            SendInput("{Enter}")
+            WinWaitClose("Assistente do Sistema", , 2)
+            SendInput("{Left}")
+            Sleep(500)
+        } else {
+            return true
+        }
+    }
+
+    MsgBox("Nenhum dos 10 números finais para a DANFE foi aceito")
+    return False
+}
+
+
 /**
  * Fecha a janela principal do sistema.
  * @return {String} "SUCESSO"
