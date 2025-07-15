@@ -31,7 +31,6 @@ ValidarExibicaoPosicaoFinanceiraCliente(){
         classeJanelaPosicaoFinanceiraCliente := "Tfrm_ExibeDebitosCliente"
 
         if WinExist("ahk_class " . classeJanelaPosicaoFinanceiraCliente, , 3) {
-            ; MsgBox("Achei a posicao financeira do cliente")
             try {
                 ControlClick("TBitBtn2")
 

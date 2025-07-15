@@ -118,9 +118,6 @@ GravarPedido(informaFinanceiro := false, imprimePedido := false){
         Sleep(500)
         SendInput("{Tab}{Enter}")
         Sleep(500)
-
-        MsgBox("executou até o final")
-
     } catch as e {
         MsgBox("Erro ao inserir item no pedido: " . e.Message, "ATENÇÃO", 16)
         return "ERRO"
