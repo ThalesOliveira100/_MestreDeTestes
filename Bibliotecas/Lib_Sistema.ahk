@@ -174,6 +174,14 @@ EncontrarNumeroDANFE() {
 }
 
 
+InformarValorEmCampo(valor, classCampo) {
+    ControlFocus(classCampo, "DYGNUS PREMIER")
+    SendInput("^a")
+    SendInput(valor)
+    Sleep(500)
+}
+
+
 /**
  * Fecha a janela principal do sistema.
  * @return {String} "SUCESSO"
