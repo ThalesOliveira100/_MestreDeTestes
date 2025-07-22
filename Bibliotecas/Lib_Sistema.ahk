@@ -174,8 +174,8 @@ EncontrarNumeroDANFE() {
 }
 
 
-InformarValorEmCampo(valor, classCampo) {
-    ControlFocus(classCampo, "DYGNUS PREMIER")
+InformarValorEmCampo(valor, classCampo, janela := "DYGNUS PREMIER") {
+    ControlFocus(classCampo, janela)
     SendInput("^a")
     SendInput(valor)
     Sleep(500)
