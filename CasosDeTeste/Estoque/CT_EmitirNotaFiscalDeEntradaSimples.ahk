@@ -13,7 +13,7 @@ try {
 
     resultado := InformarDadosGeraisDaNotaDeEntrada(dadosNota)
     if (resultado == "FALHA") {
-        MsgBox("Falha durante a inclusão de dados gerais da nota", "atenção", 16)
+        MsgBox("Falha durante a inclusão de dados gerais da nota: " . e.Message, "atenção", 16)
         ExitApp(500)
     }
 
@@ -28,6 +28,11 @@ try {
 
     resultado := InformarProdutosDaNotaDeEntrada(500, 2102)
 
+    resultado := InformarDefinicaoFiscalDoItem()
+    if (resultado == "FALHA") {
+        MsgBox("Falha durante a inclusão da definição fiscal do item 2: " . e.Message, "Atenção!", 16)
+        ExitApp(500)
+    }
 
 } catch as e {
     MsgBox("Falha ocorrida durante a emissão de nota de entrada: " . e.Message)
