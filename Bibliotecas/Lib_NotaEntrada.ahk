@@ -172,7 +172,7 @@ InformarProdutosDaNotaDeEntrada(codigoProduto, cfop, params := Map()){
         InformarValorEmCampo(vlrDesconto, classVlrDesconto)
         SendInput("{Enter}")
 
-        ; Informar Definição Fiscal do Item
+        InformarDefinicaoFiscalDoItem()
 
         
     } catch as e {
@@ -182,6 +182,61 @@ InformarProdutosDaNotaDeEntrada(codigoProduto, cfop, params := Map()){
     return "SUCESSO"
 }
 
-InformarDefinicaoFiscalDoItem() {
+InformarDefinicaoFiscalDoItem(CSTIPI := 49, CSTICMS := 90, CSTPISCOFINS := 98, params := Map()) {
+    try {
+        valorAliquotaICMS       := params.Has("aliquotaICMS")       ? params["aliquotaICMS"] : ""
+        valorPercentualReducao  := params.Has("percentualReducao")  ? params["percentualReducao"] : ""
+        valorBCICMS             := params.Has("BCICMS")             ? params["BCICMS"] : 0
+        valorICMS               := params.Has("ICMS")               ? params["ICMS"] : 0
+        valorIsentoICMS         := params.Has("isentoICMS")         ? params["isentoICMS"] : 0
+        valorOutrasICMS         := params.Has("outrasICMS")         ? params["outrasICMS"] : 0
+        percentualMVAST         := params.Has("percentualMVAST")    ? params["percentualMVAST"] : 0
+        naturezaFrete           := params.Has("naturezaFrete")      ? params["naturezaFrete"] : 9
+        
 
+        tituloJanela := "Definição Contábil / Fiscal do Item"
+        WinActivate(tituloJanela)
+
+        classCampoCSTIPI := "TDBEdit4"
+        classCampoCSTICMS := "TDBEdit7"
+        classCampoCSTPISCOFINS := "TDBEdit1"
+        classCampoAliquotaICMS := "TJvDBCalcEdit36"
+        classPercentualReducao := "TJvDBCalcEdit31"
+        classCampoValorBCICMS := "TJvDBCalcEdit40"
+        classCampoValorICMS := "TJvDBCalcEdit39"
+        classCampoValorIsentoICMS := "TJvDBCalcEdit38"
+        classCampoValorOutrasICMS := "TJvDBCalcEdit37"
+        classCampoPercentualMVAST := "TJvDBCalcEdit32"
+        classCampoNaturezaFrete := "TDBEdit2"
+        classBotaoConfirmar := "TBitBtn3"
+
+        Sleep(500)
+
+        InformarValorEmCampo(CSTIPI, classCampoCSTIPI, tituloJanela)
+        InformarValorEmCampo(CSTICMS, classCampoCSTICMS, tituloJanela)
+
+        if not (valorAliquotaICMS == "") {
+            InformarValorEmCampo(valorAliquotaICMS, classCampoAliquotaICMS, tituloJanela)
+        }
+
+        if not (valorPercentualReducao == "") {
+            InformarValorEmCampo(valorPercentualReducao, classPercentualReducao, tituloJanela)
+        }
+
+        InformarValorEmCampo(valorBCICMS, classCampoValorBCICMS, tituloJanela)
+        InformarValorEmCampo(valorICMS, classCampoValorICMS, tituloJanela)
+        InformarValorEmCampo(valorIsentoICMS, classCampoValorIsentoICMS, tituloJanela)
+        InformarValorEmCampo(valorOutrasICMS, classCampoValorOutrasICMS, tituloJanela)
+        InformarValorEmCampo(percentualMVAST, classCampoPercentualMVAST, tituloJanela)
+        InformarValorEmCampo(naturezaFrete, classCampoNaturezaFrete, tituloJanela)
+
+        Sleep(500)
+
+        ControlClick(classBotaoConfirmar, tituloJanela)
+
+    } catch as e {
+        MsgBox("Erro na inclusão da Definição Fiscal do Item: " . e.Message)
+        return "FALHA"
+    }
+    return "SUCESSO"
 }
