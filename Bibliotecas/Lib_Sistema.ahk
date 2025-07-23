@@ -144,33 +144,39 @@ AcessarTelaPorCodigo(codigo) {
 
 
 EncontrarNumeroDANFE() {
-    tituloJanelaDANFE := "Informe o Número do DANFE"
-    classCampoDANFE := "TMaskEdit1"
-    classBotaoConfirmar := "TBitBtn1"
-
-    ControlFocus(classCampoDANFE, tituloJanelaDANFE)
-    SendInput("123456789")
-    Sleep(500)
-
-    Loop 10 {
-        numeroFinal := A_Index - 1
+    try {
+        tituloJanelaDANFE := "Informe o Número do DANFE"
+        classCampoDANFE := "TMaskEdit1"
+        classBotaoConfirmar := "TBitBtn1"
 
         ControlFocus(classCampoDANFE, tituloJanelaDANFE)
-        SendInput(numeroFinal)
-        ControlClick(classBotaoConfirmar, tituloJanelaDANFE)
+        SendInput("123456789")
+        Sleep(500)
 
-        if WinWait("Assistente do Sistema", , 1.5) {
-            SendInput("{Enter}")
-            WinWaitClose("Assistente do Sistema", , 2)
-            SendInput("{Left}")
-            Sleep(500)
-        } else {
-            return true
+        Loop 10 {
+            numeroFinal := A_Index - 1
+
+            ControlFocus(classCampoDANFE, tituloJanelaDANFE)
+            SendInput(numeroFinal)
+            ControlClick(classBotaoConfirmar, tituloJanelaDANFE)
+
+            if WinWait("Assistente do Sistema", , 3) {
+                SendInput("{Enter}")
+                WinWaitClose("Assistente do Sistema", , 2)
+                SendInput("{Left}")
+                Sleep(500)
+
+            } else {
+                return true
+            }
         }
-    }
 
-    MsgBox("Nenhum dos 10 números finais para a DANFE foi aceito")
-    return False
+        MsgBox("Nenhum dos 10 números finais para a DANFE foi aceito")
+        return False
+
+    } catch as e {
+        MsgBox("Erro encontrado: " . e.Message)
+    }    
 }
 
 
