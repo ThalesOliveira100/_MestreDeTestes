@@ -19,7 +19,7 @@ try {
     }
 
     valoresNota := Map(
-        "VlrTotalProdutos", 1250,
+        "VlrTotalProdutos", 75,
     )
 
     resultado := InformarValoresDaNotaDeEntrada(valoresNota)
@@ -33,6 +33,12 @@ try {
     resultado := InformarProdutosDaNotaDeEntrada(90, 2102)
     if (resultado == "FALHA") {
         MsgBox("Falha durante a inclusão da definição fiscal do item 2: " . e.Message, "Atenção!", 16)
+        ExitApp(500)
+    }
+
+    resultado := GravarNotaFiscalDeEntrada()
+    if (resultado == "FALHA") {
+        MsgBox("Falha durante a gravação de nota fiscal de entrada 2: " . e.Message, "Atenção!", 16)
         ExitApp(500)
     }
 

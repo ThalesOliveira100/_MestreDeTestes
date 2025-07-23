@@ -271,3 +271,64 @@ InformarDefinicaoFiscalDoItem(CSTIPI := 49, CSTICMS := 90, CSTPISCOFINS := 98, p
     }
     return "SUCESSO"
 }
+
+GravarNotaFiscalDeEntrada() {
+    try {
+        Sleep(500)
+        SendInput("{F8}")
+        
+        if (WinWaitActive("Diferenças da Nota Fiscal de Entrada", , 5)) {
+            MsgBox(
+                "Houve diferenças da Nota Fiscal de Entrada! Confira os valores informados e tente novamente", 
+                "Atenção! Falha na gravação	da nota!",
+                16
+            )
+            return "FALHA"
+        }
+
+        ; Clica no botão Confirmar na confirmação de gravação da nota
+        ControlClick("Button1", "Confirm")
+        WinWaitClose("Confirm", , 3)
+
+
+        if (WinWaitActive("AGUARDE", , 3)) {
+            WinWaitClose("AGUARDE")
+        } 
+
+        classjanelaFinanceiroEntrada := "ahk_class Tfrm_NotaFiscalEntradaDigitarFatura"
+        hWnd := WinWaitActive(classjanelaFinanceiroEntrada, , 3)
+
+        if (hWnd) {
+            classBotaoCancelarFatura := "TBitBtn2"
+
+            WinActivate("ahk_id " . hWnd)
+            SendInput("{F12}")
+
+            if (WinWaitActive("Confirmação", , 3)) {
+                ControlClick("Button1", "Confirmação")
+
+                if (WinWaitActive("Confirmação de Cancelamento de Fatura", , 3)) {
+                    ControlClick("TCheckBox1", "Confirmação de Cancelamento de Fatura")
+                    InformarValorEmCampo("TESTE NOTA FISCAL ENTRADA", "TEdit1", "Confirmação de Cancelamento de Fatura")
+                    SendInput("{F6}")
+                    WinWaitClose("Confirmação de Cancelamento de Fatura", , 3)
+                }
+
+                WinWaitClose("Confirmação", , 3)
+            }            
+            WinWaitClose("ahk_id " . hWnd, , 2)
+        }
+
+        WinWaitActive("Assistente do Sistema", , 3)
+        ControlClick("TBitBtn1")
+        Sleep(500)
+
+        MsgBox("Script executado até o final!") 
+
+        return "SUCESSO"
+
+    } catch as e {
+        MsgBox("Erro na gravação da nota fiscal de entrada: " . e.Message)
+        return "FALHA"
+    }
+}
