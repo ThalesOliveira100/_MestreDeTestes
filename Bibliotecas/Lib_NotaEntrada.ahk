@@ -28,38 +28,62 @@ SetTitleMatchMode(1) ; Define que a busca pelo título do programa deve começar
  */
 InformarDadosGeraisDaNotaDeEntrada(params){
     try {
+        classJanelaNotaEntrada := "Tfrm_NotaFiscalEntrada1"
+        WinWaitActive('ahk_class ' . classJanelaNotaEntrada, , 3)
+
         estabelecimento     := params.Has("estabelecimento")    ? params["estabelecimento"]: 1
         fornecedor          := params.Has("fornecedor")         ? params["fornecedor"]: 2
         cliente             := params.Has("cliente")            ? params["cliente"]: 100
-        tipoDocumento       := params.Has("tipoDocumento")      ? params["tipoDocumento"]: 15
+        tipoDocumento       := params.Has("tipoDocumento")      ? params["tipoDocumento"]: 2
         numero              := params.Has("numero")             ? params["numero"]: ""
         serie               := params.Has("serie")              ? params["serie"]: ""
         tipoCadastro        := params.Has("tipoCadastro")       ? params["tipoCadastro"]: "F"
 
-        SendInput(estabelecimento . "{Tab}")
+        classCampoEstabelecimento := "TMaskEdit15"
+        classCampoCadastro := "TMaskEdit14"
+        classCampoTipoDocumento := "TMaskEdit13"
+        classCampoNumero := "TMaskEdit12"
+        classCampoSerie := "TJvDBLookupCombo1"
+        classCampoTipoCadastro := "TEdit1"
 
+        ; Informa o estabelecimento
+        InformarValorEmCampo(estabelecimento, classCampoEstabelecimento, "DYGNUS PREMIER")
+        SendInput("{Enter}")
+
+        ; Confere se o tipoCadastro não é F, e exibe mensagem informando que ainda não está preparado, retorna ao fluxo
         if (tipoCadastro != "F") {
             MsgBox("Tipo de cadastro diferente de F informado, script ainda não está preparado para isso")
             WinActivate("DYGNUS PREMIER")
         }
 
-        SendInput(fornecedor . "{Tab}")
-        SendInput(tipoDocumento . "{Tab}")
+        ; Informa código do fornecedor
+        InformarValorEmCampo(fornecedor, classCampoCadastro)
+        SendInput("{Enter}")
 
+        ; Informa código do tipo de documento
+        InformarValorEmCampo(tipoDocumento, classCampoTipoDocumento)
+        SendInput("{Enter}")
+
+        ; Gera um número aleatório de 1000 a 99999 caso o número não seja especificado.
         if (numero == "") {
             numero := Random(1000, 99999)
         }
 
-        SendInput(numero . "{Tab}")
+        ; Informa o número da nota
+        InformarValorEmCampo(numero, classCampoNumero)
+        SendInput("{Enter}")
 
+        ; Se a série não estiver em branca, para utilizar o valor padrão, irá informar o número da série.
         if (serie != "") {
-            SendInput(serie)
+            InformarValorEmCampo(serie, classCampoSerie)
+            SendInput("{Enter}")
         }
 
-        SendInput("{Tab}{F3}")
+        SendInput("{Enter}{F3}")
 
+        ; Se o tipo de documento da nota for 15, exigindo informação da chave de acesso, o sistema executa a função para tentar encontrar a chave.
         if (tipoDocumento == 15) {
-            WinWait("Confirm")
+            WinWait("Confirm", , 3)
             SendInput("{Enter}")
 
             if not WinWait("Informe o Número do DANFE", , 5) {
@@ -131,7 +155,9 @@ InformarValoresDaNotaDeEntrada(params){
         InformarValorEmCampo(VlrDesconto, classVlrDesconto)
         InformarValorEmCampo(VlrICMSDesonerado, classVlrICMSDesonerado)
 
-        SendInput("{Enter}{Enter}{Enter}")
+        Loop 3 {
+            SendInput("{Enter}")
+        }
 
     } catch as e {
         MsgBox("Erro na inclusão dos valores da nota de entrada: " . e.Message)
@@ -160,6 +186,8 @@ InformarProdutosDaNotaDeEntrada(codigoProduto, cfop, params := Map()){
         classVlrUnitario    := "TJvCalcEdit6"
         classTipoDesconto   := "TMaskEdit4"
         classVlrDesconto    := "TJvCalcEdit5"
+
+        Sleep(500)
 
         InformarValorEmCampo(tipoEntrada, classTipoEntrada)
         InformarValorEmCampo(cfop, classCFOP)
@@ -195,7 +223,7 @@ InformarDefinicaoFiscalDoItem(CSTIPI := 49, CSTICMS := 90, CSTPISCOFINS := 98, p
         
 
         tituloJanela := "Definição Contábil / Fiscal do Item"
-        WinActivate(tituloJanela)
+        WinWaitActive(tituloJanela, , 3)
 
         classCampoCSTIPI := "TDBEdit4"
         classCampoCSTICMS := "TDBEdit7"
@@ -228,11 +256,14 @@ InformarDefinicaoFiscalDoItem(CSTIPI := 49, CSTICMS := 90, CSTPISCOFINS := 98, p
         InformarValorEmCampo(valorIsentoICMS, classCampoValorIsentoICMS, tituloJanela)
         InformarValorEmCampo(valorOutrasICMS, classCampoValorOutrasICMS, tituloJanela)
         InformarValorEmCampo(percentualMVAST, classCampoPercentualMVAST, tituloJanela)
+        InformarValorEmCampo(CSTPISCOFINS, classCampoCSTPISCOFINS, tituloJanela)
         InformarValorEmCampo(naturezaFrete, classCampoNaturezaFrete, tituloJanela)
 
         Sleep(500)
 
         ControlClick(classBotaoConfirmar, tituloJanela)
+
+        WinWaitClose(tituloJanela, , 3)
 
     } catch as e {
         MsgBox("Erro na inclusão da Definição Fiscal do Item: " . e.Message)
