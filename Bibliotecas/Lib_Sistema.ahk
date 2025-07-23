@@ -146,6 +146,8 @@ AcessarTelaPorCodigo(codigo) {
 EncontrarNumeroDANFE() {
     try {
         tituloJanelaDANFE := "Informe o Número do DANFE"
+        WinWaitActive(tituloJanelaDANFE, , 3)
+
         classCampoDANFE := "TMaskEdit1"
         classBotaoConfirmar := "TBitBtn1"
 
@@ -158,11 +160,12 @@ EncontrarNumeroDANFE() {
 
             ControlFocus(classCampoDANFE, tituloJanelaDANFE)
             SendInput(numeroFinal)
-            ControlClick(classBotaoConfirmar, tituloJanelaDANFE)
+            ; ControlClick(classBotaoConfirmar, tituloJanelaDANFE)
+            SendInput("{Enter}{Enter}")
 
             if WinWait("Assistente do Sistema", , 3) {
                 SendInput("{Enter}")
-                WinWaitClose("Assistente do Sistema", , 2)
+                WinWaitClose("Assistente do Sistema", , 3)
                 SendInput("{Left}")
                 Sleep(500)
 
