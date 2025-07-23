@@ -17,22 +17,22 @@ try {
         ExitApp(500)
     }
 
-    valoresNota := Map(
-        "VlrTotalProdutos", 1250,
-    )
-    resultado := InformarValoresDaNotaDeEntrada(valoresNota)
-    if (resultado == "FALHA") {
-        MsgBox("Falha durante a inclusão dos valores na nota de entrada", "Atenção!", 16)
-        ExitApp(500)
-    }
+    ; valoresNota := Map(
+    ;     "VlrTotalProdutos", 1250,
+    ; )
+    ; resultado := InformarValoresDaNotaDeEntrada(valoresNota)
+    ; if (resultado == "FALHA") {
+    ;     MsgBox("Falha durante a inclusão dos valores na nota de entrada", "Atenção!", 16)
+    ;     ExitApp(500)
+    ; }
 
-    resultado := InformarProdutosDaNotaDeEntrada(500, 2102)
+    ; resultado := InformarProdutosDaNotaDeEntrada(500, 2102)
 
-    resultado := InformarDefinicaoFiscalDoItem()
-    if (resultado == "FALHA") {
-        MsgBox("Falha durante a inclusão da definição fiscal do item 2: " . e.Message, "Atenção!", 16)
-        ExitApp(500)
-    }
+    ; resultado := InformarDefinicaoFiscalDoItem()
+    ; if (resultado == "FALHA") {
+    ;     MsgBox("Falha durante a inclusão da definição fiscal do item 2: " . e.Message, "Atenção!", 16)
+    ;     ExitApp(500)
+    ; }
 
 } catch as e {
     MsgBox("Falha ocorrida durante a emissão de nota de entrada: " . e.Message)
